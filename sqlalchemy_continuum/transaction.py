@@ -116,7 +116,7 @@ def create_triggers(cls):
 
 
 class TransactionFactory(ModelFactory):
-    model_name = 'Transaction'
+    model_name = 'VersionTransaction'
 
     def __init__(self, remote_addr=True):
         self.remote_addr = remote_addr
@@ -125,16 +125,16 @@ class TransactionFactory(ModelFactory):
         """
         Create Transaction class.
         """
-        class Transaction(
+        class VersionTransaction(
             manager.declarative_base,
             TransactionBase
         ):
-            __tablename__ = 'transaction'
+            __tablename__ = 'version_transaction'
             __versioning_manager__ = manager
 
             id = sa.Column(
                 sa.types.BigInteger,
-                sa.schema.Sequence('transaction_id_seq'),
+                sa.schema.Sequence('version_transaction_id_seq'),
                 primary_key=True,
                 autoincrement=True
             )
@@ -177,7 +177,7 @@ class TransactionFactory(ModelFactory):
                     for field in fields
                     if hasattr(self, field)
                 )
-                return '<Transaction %s>' % ', '.join(
+                return '<VersionTransaction %s>' % ', '.join(
                     (
                         '%s=%r' % (field, value)
                         if not isinstance(value, six.integer_types)
@@ -190,5 +190,5 @@ class TransactionFactory(ModelFactory):
                 )
 
         if manager.options['native_versioning']:
-            create_triggers(Transaction)
-        return Transaction
+            create_triggers(VersionTransaction)
+        return VersionTransaction
